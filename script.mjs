@@ -1,4 +1,4 @@
-import { answerToQuestionOne } from "./common.mjs";
+import { getQuestionAndAnswerArrayOfObjects } from "./common.mjs";
 import { getUserIDs } from "./data.mjs";
 
 const state = {
@@ -19,17 +19,40 @@ function populateUserSelect() {
 function addListeners() {
   document.getElementById("user-select").addEventListener("change", (e) => {
     state.userId = parseInt(e.target.value);
-    // add rendering function here
+    renderReport();
   });
 }
 
-function displayQuestionOne() {
-  const questionOne =
-    "What was the user's most often listened to song according to the data?";
+function createQuestionAndAnswerCard({ question, answer }) {
+  const questionAndAnswerCard = document.createElement("div");
+
+  const questionElement = document.createElement("p");
+  questionElement.textContent = question;
+
+  const answerElement = document.createElement("p");
+  answerElement.textContent = answer;
+
+  questionAndAnswerCard.append(questionElement, answerElement);
+
+  return questionAndAnswerCard;
 }
 
 function renderReport() {
-  const userAnswerOne = answerToQuestionOne(state.userId);
+  const reportArea = document.getElementById("report-area");
+  reportArea.innerHTML = "";
+
+  const questionAndAnswerArrayOfObjects = getQuestionAndAnswerArrayOfObjects(
+    state.userId,
+  );
+
+  questionAndAnswerArrayOfObjects.forEach((questionAndAnswerObject) => {
+    if (questionAndAnswerObject.answer) {
+      const questionAndAnswerCard = createQuestionAndAnswerCard(
+        questionAndAnswerObject,
+      );
+      reportArea.append(questionAndAnswerCard);
+    }
+  });
 }
 
 window.onload = function () {

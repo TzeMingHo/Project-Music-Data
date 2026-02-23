@@ -1,3 +1,4 @@
+import { answerToQuestionOne } from "./common.mjs";
 import { getUserIDs } from "./data.mjs";
 
 const state = {
@@ -20,6 +21,15 @@ function addListeners() {
     state.userId = parseInt(e.target.value);
     // add rendering function here
   });
+}
+
+function displayQuestionOne() {
+  const questionOne =
+    "What was the user's most often listened to song according to the data?";
+}
+
+function renderReport() {
+  const userAnswerOne = answerToQuestionOne(state.userId);
 }
 
 window.onload = function () {

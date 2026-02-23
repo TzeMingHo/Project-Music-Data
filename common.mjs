@@ -19,17 +19,22 @@ function findMostListenedSongByCount(songIdOccurrenceMap) {
   return `${artist} - ${title}`;
 }
 
-function findMostListenedSongByTime(songIdOccurrenceMap) {
-  const eachSongTotalListenedTimeArray = Array.from(songIdOccurrenceMap).map(
-    ([song_id, occurrence]) => {
-      const { duration_seconds } = getSong(song_id);
-      return [song_id, occurrence * duration_seconds];
-    },
-  );
-  const sortedEachSongTotalListenedTimeArray =
-    eachSongTotalListenedTimeArray.sort((a, b) => b[1] - a[1]);
+function convertOccurrenceMapToTotalListenedTimeArray(songIdOccurrenceMap) {
+  return Array.from(songIdOccurrenceMap).map(([song_id, occurrence]) => {
+    const { duration_seconds } = getSong(song_id);
+    return [song_id, occurrence * duration_seconds];
+  });
+}
 
-  const mostListenedSongIdByTime = sortedEachSongTotalListenedTimeArray[0][0];
+function findMostListenedSongByTime(songIdOccurrenceMap) {
+  const songIdTotalListenedTimeArray =
+    convertOccurrenceMapToTotalListenedTimeArray(songIdOccurrenceMap);
+
+  const sortedSongIdTotalListenedTimeArray = songIdTotalListenedTimeArray.sort(
+    (a, b) => b[1] - a[1],
+  );
+
+  const mostListenedSongIdByTime = sortedSongIdTotalListenedTimeArray[0][0];
   const { artist, title } = getSong(mostListenedSongIdByTime);
   return `${artist} - ${title}`;
 }
@@ -43,6 +48,8 @@ function findMostListenedArtistByCount(songIdOccurrenceMap) {
   });
   return Array.from(artistNameOccurrenceMap).sort((a, b) => b[1] - a[1])[0][0];
 }
+
+// find most listened artist by time
 
 export function getQuestionAndAnswerArrayOfObjects(userId) {
   const songIdOccurrenceMap = createSongIdOccurrenceMap(userId);
@@ -62,6 +69,10 @@ export function getQuestionAndAnswerArrayOfObjects(userId) {
       question:
         "What was the user's most often listened to artist according to the data? (By count)",
       answer: findMostListenedArtistByCount(songIdOccurrenceMap),
+    },
+    {
+      question:
+        "What was the user's most often listened to artist according to the data? (By time)",
     },
   ];
 

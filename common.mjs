@@ -128,6 +128,11 @@ export function getQuestionAndAnswerArrayOfObjects(userId) {
         createSongIdOccurrenceMap(fridayNightEventsArray),
       ),
     },
+    {
+      question:
+        "What song did the user listen to the most times in a row (i.e. without any other song being listened to in between)? How many times was it listened to?",
+      answer: "",
+    },
   ];
 
   return questionAndAnswerArrayOfObjects;

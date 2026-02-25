@@ -88,26 +88,27 @@ function fridayNightFilter(userListenEventsArray) {
 }
 
 function findSongListenedMostTimesInARow(userListenEventsArray) {
+  if (!userListenEventsArray || userListenEventsArray.length === 0) return "";
+
   let mostListenedSongId = "";
-  let maxCount = 0;
+  let maxCount = 1;
   let count = 1;
 
-  for (let index = 1; index < userListenEventsArray?.length; index++) {
-    if (
-      userListenEventsArray[index].song_id ===
-      userListenEventsArray[index - 1].song_id
-    ) {
+  for (let index = 1; index < userListenEventsArray.length; index++) {
+    const currentSongId = userListenEventsArray[index].song_id;
+    const previousSongId = userListenEventsArray[index - 1].song_id;
+
+    if (currentSongId === previousSongId) {
       count++;
     } else {
-      if (count > maxCount) {
-        maxCount = count;
-        mostListenedSongId = userListenEventsArray[index - 1].song_id;
-      }
       count = 1;
     }
-  }
 
-  // missing the last one???
+    if (count > maxCount) {
+      maxCount = count;
+      mostListenedSongId = currentSongId;
+    }
+  }
 
   if (mostListenedSongId) {
     const { artist, title } = getSong(mostListenedSongId);
@@ -130,10 +131,8 @@ function findEverydayListenedSongs(userListenEventsArray) {
 
   const everydayListenedSongIdsAndDatesSetArray = Array.from(
     songIdDatesSetMap,
-  ).filter(([song_id, datesSet]) => {
-    if (datesSet.size === everydaySet.size) {
-      return song_id;
-    }
+  ).filter((pair) => {
+    return pair[1].size === everydaySet.size;
   });
 
   return everydayListenedSongIdsAndDatesSetArray.length !== 0
@@ -172,20 +171,9 @@ function findMostListenedGenres(songIdOccurrenceMap) {
     (a, b) => b[1] - a[1],
   );
 
-  if (sortedGenreOccurrenceArray.length !== 0) {
-    let topGenres = [];
-    for (
-      let index = 0;
-      index < sortedGenreOccurrenceArray.slice(0, 3).length;
-      index++
-    ) {
-      const genreName = sortedGenreOccurrenceArray[index][0];
-      topGenres.push(genreName);
-    }
-    return topGenres;
-  } else {
-    return "";
-  }
+  return sortedGenreOccurrenceArray
+    .slice(0, 3)
+    .map((genreOccurrencePair) => genreOccurrencePair[0]);
 }
 
 function createTopGenresQuestion(topGenres) {

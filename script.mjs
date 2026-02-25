@@ -46,13 +46,19 @@ function renderReport() {
   );
 
   questionAndAnswerArrayOfObjects.forEach((questionAndAnswerObject) => {
-    if (questionAndAnswerObject.answer) {
+    if (questionAndAnswerObject.answer && questionAndAnswerObject.question) {
       const questionAndAnswerCard = createQuestionAndAnswerCard(
         questionAndAnswerObject,
       );
       reportArea.append(questionAndAnswerCard);
     }
   });
+
+  if (state.userId && reportArea.innerHTML === "") {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.textContent = "This user didn't listen to any songs.";
+    reportArea.append(emptyMessage);
+  }
 }
 
 window.onload = function () {

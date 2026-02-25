@@ -106,11 +106,40 @@ function findSongListenedMostTimesInARow(userListenEventsArray) {
       count = 1;
     }
   }
+
   if (mostListenedSongId) {
     const { artist, title } = getSong(mostListenedSongId);
     return `${artist} - ${title} (length: ${maxCount})`;
   }
   return "";
+}
+
+function findEverydayListenedSongs(userListenEventsArray) {
+  const everydaySet = new Set();
+  const songIdDatesSetMap = new Map();
+  userListenEventsArray?.forEach(({ timestamp, song_id }) => {
+    const dateString = timestamp.split("T")[0];
+    everydaySet.add(dateString);
+
+    const datesSet = songIdDatesSetMap.get(song_id) || new Set();
+
+    songIdDatesSetMap.set(song_id, datesSet.add(dateString));
+  });
+
+  const everydayListenedSongIdsAndDatesSetArray = Array.from(
+    songIdDatesSetMap,
+  ).filter(([song_id, datesSet]) => {
+    if (datesSet.size === everydaySet.size) {
+      return song_id;
+    }
+  });
+
+  return everydayListenedSongIdsAndDatesSetArray.length !== 0
+    ? everydayListenedSongIdsAndDatesSetArray.map((songIdAndDates) => {
+        const { artist, title } = getSong(songIdAndDates[0]);
+        return `${artist} - ${title}`;
+      })
+    : "";
 }
 
 export function getQuestionAndAnswerArrayOfObjects(userId) {
@@ -158,6 +187,11 @@ export function getQuestionAndAnswerArrayOfObjects(userId) {
       question:
         "What song did the user listen to the most times in a row (i.e. without any other song being listened to in between)? How many times was it listened to?",
       answer: findSongListenedMostTimesInARow(userListenEventsArray),
+    },
+    {
+      question:
+        "Are there any songs that, on each day the user listened to music, they listened to every day?",
+      answer: findEverydayListenedSongs(userListenEventsArray),
     },
   ];
 

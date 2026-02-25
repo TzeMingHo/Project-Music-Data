@@ -1,4 +1,4 @@
-import { getUserIDs, getListenEvents, getSong } from "./data.mjs";
+import { getListenEvents, getSong } from "./data.mjs";
 
 function getTopWinnerFrom(arrayOfArrays) {
   return arrayOfArrays.length !== 0

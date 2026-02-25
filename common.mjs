@@ -49,18 +49,18 @@ function findMostListenedSongStringByTime(songIdOccurrenceMap) {
   }
 }
 
-function accumulateNumberGroupedByKeysMap(arrayOfArrays) {
-  const artistStringNumberMap = new Map();
+function accumulateNumberGroupedByArtistsMap(arrayOfArrays) {
+  const artistNameStringNumberMap = new Map();
   arrayOfArrays.forEach(([song_id, number]) => {
     const artistNameString = getSong(song_id).artist;
-    const currentNumber = artistStringNumberMap.get(artistNameString) || 0;
-    artistStringNumberMap.set(artistNameString, currentNumber + number);
+    const currentNumber = artistNameStringNumberMap.get(artistNameString) || 0;
+    artistNameStringNumberMap.set(artistNameString, currentNumber + number);
   });
-  return artistStringNumberMap;
+  return artistNameStringNumberMap;
 }
 
 function findMostListenedArtistByCount(songIdOccurrenceMap) {
-  const artistNameOccurrenceMap = accumulateNumberGroupedByKeysMap(
+  const artistNameOccurrenceMap = accumulateNumberGroupedByArtistsMap(
     Array.from(songIdOccurrenceMap),
   );
   return getTopWinnerFrom(Array.from(artistNameOccurrenceMap));
@@ -70,7 +70,7 @@ function findMostListenedArtistByTime(songIdOccurrenceMap) {
   const songIdTotalListenedSecondsArray =
     convertOccurrenceMapToTotalListenedSecondsArray(songIdOccurrenceMap);
 
-  const artistNameTotalSecondsMap = accumulateNumberGroupedByKeysMap(
+  const artistNameTotalSecondsMap = accumulateNumberGroupedByArtistsMap(
     songIdTotalListenedSecondsArray,
   );
   return getTopWinnerFrom(Array.from(artistNameTotalSecondsMap));
@@ -107,6 +107,8 @@ function findSongListenedMostTimesInARow(userListenEventsArray) {
     }
   }
 
+  // missing the last one???
+
   if (mostListenedSongId) {
     const { artist, title } = getSong(mostListenedSongId);
     return `${artist} - ${title} (length: ${maxCount})`;
@@ -135,10 +137,12 @@ function findEverydayListenedSongs(userListenEventsArray) {
   });
 
   return everydayListenedSongIdsAndDatesSetArray.length !== 0
-    ? everydayListenedSongIdsAndDatesSetArray.map((songIdAndDates) => {
-        const { artist, title } = getSong(songIdAndDates[0]);
-        return `${artist} - ${title}`;
-      })
+    ? everydayListenedSongIdsAndDatesSetArray
+        .map((songIdAndDates) => {
+          const { artist, title } = getSong(songIdAndDates[0]);
+          return `${artist} - ${title}`;
+        })
+        .join(", ")
     : "";
 }
 
@@ -149,13 +153,55 @@ function convertSongIdOccurrenceMapToGenreOccurrenceArray(songIdOccurrenceMap) {
   });
 }
 
-function findMostListenedGenres(songIdOccurrenceMap) {}
+function createGroupByGenreMap(genreOccurrenceArray) {
+  const groupByGenreMap = new Map();
+  genreOccurrenceArray?.forEach(([genre, occurrence]) => {
+    const currentOccurrence = groupByGenreMap.get(genre) || 0;
+    groupByGenreMap.set(genre, currentOccurrence + occurrence);
+  });
+  return groupByGenreMap;
+}
+
+function findMostListenedGenres(songIdOccurrenceMap) {
+  const genreOccurrenceArray =
+    convertSongIdOccurrenceMapToGenreOccurrenceArray(songIdOccurrenceMap);
+
+  const groupByGenreMap = createGroupByGenreMap(genreOccurrenceArray);
+
+  const sortedGenreOccurrenceArray = Array.from(groupByGenreMap).sort(
+    (a, b) => b[1] - a[1],
+  );
+
+  if (sortedGenreOccurrenceArray.length !== 0) {
+    let topGenres = [];
+    for (
+      let index = 0;
+      index < sortedGenreOccurrenceArray.slice(0, 3).length;
+      index++
+    ) {
+      const genreName = sortedGenreOccurrenceArray[index][0];
+      topGenres.push(genreName);
+    }
+    return topGenres;
+  } else {
+    return "";
+  }
+}
+
+function createTopGenresQuestion(topGenres) {
+  if (topGenres.length === 0) return "";
+  return topGenres.length === 1
+    ? "What was the user's top genre to listen to by number of listens?"
+    : `What were the user's top ${topGenres.length} genres to listen to by number of listens?`;
+}
 
 export function getQuestionAndAnswerArrayOfObjects(userId) {
   const userListenEventsArray = getListenEvents(userId);
   const songIdOccurrenceMap = createSongIdOccurrenceMap(userListenEventsArray);
 
   const fridayNightEventsArray = fridayNightFilter(userListenEventsArray);
+
+  const topGenres = findMostListenedGenres(songIdOccurrenceMap);
 
   const questionAndAnswerArrayOfObjects = [
     {
@@ -203,9 +249,8 @@ export function getQuestionAndAnswerArrayOfObjects(userId) {
       answer: findEverydayListenedSongs(userListenEventsArray),
     },
     {
-      question:
-        "What were the user's top three genres to listen to by number of listens?",
-      answer: "",
+      question: createTopGenresQuestion(topGenres),
+      answer: topGenres.join(", "),
     },
   ];
 

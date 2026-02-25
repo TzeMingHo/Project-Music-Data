@@ -49,7 +49,7 @@ function findMostListenedSongStringByTime(songIdOccurrenceMap) {
   }
 }
 
-function accumulateNumberGroupedByArtistNameMap(arrayOfArrays) {
+function accumulateNumberGroupedByKeysMap(arrayOfArrays) {
   const artistStringNumberMap = new Map();
   arrayOfArrays.forEach(([song_id, number]) => {
     const artistNameString = getSong(song_id).artist;
@@ -60,7 +60,7 @@ function accumulateNumberGroupedByArtistNameMap(arrayOfArrays) {
 }
 
 function findMostListenedArtistByCount(songIdOccurrenceMap) {
-  const artistNameOccurrenceMap = accumulateNumberGroupedByArtistNameMap(
+  const artistNameOccurrenceMap = accumulateNumberGroupedByKeysMap(
     Array.from(songIdOccurrenceMap),
   );
   return getTopWinnerFrom(Array.from(artistNameOccurrenceMap));
@@ -70,7 +70,7 @@ function findMostListenedArtistByTime(songIdOccurrenceMap) {
   const songIdTotalListenedSecondsArray =
     convertOccurrenceMapToTotalListenedSecondsArray(songIdOccurrenceMap);
 
-  const artistNameTotalSecondsMap = accumulateNumberGroupedByArtistNameMap(
+  const artistNameTotalSecondsMap = accumulateNumberGroupedByKeysMap(
     songIdTotalListenedSecondsArray,
   );
   return getTopWinnerFrom(Array.from(artistNameTotalSecondsMap));
@@ -142,6 +142,15 @@ function findEverydayListenedSongs(userListenEventsArray) {
     : "";
 }
 
+function convertSongIdOccurrenceMapToGenreOccurrenceArray(songIdOccurrenceMap) {
+  return Array.from(songIdOccurrenceMap).map(([song_id, occurrence]) => {
+    const { genre } = getSong(song_id);
+    return [genre, occurrence];
+  });
+}
+
+function findMostListenedGenres(songIdOccurrenceMap) {}
+
 export function getQuestionAndAnswerArrayOfObjects(userId) {
   const userListenEventsArray = getListenEvents(userId);
   const songIdOccurrenceMap = createSongIdOccurrenceMap(userListenEventsArray);
@@ -192,6 +201,11 @@ export function getQuestionAndAnswerArrayOfObjects(userId) {
       question:
         "Are there any songs that, on each day the user listened to music, they listened to every day?",
       answer: findEverydayListenedSongs(userListenEventsArray),
+    },
+    {
+      question:
+        "What were the user's top three genres to listen to by number of listens?",
+      answer: "",
     },
   ];
 

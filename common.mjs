@@ -8,7 +8,7 @@ function getTopWinnerFrom(arrayOfArrays) {
 
 function createSongIdOccurrenceMap(userListenEventsArray) {
   const songIdOccurrenceMap = new Map();
-  userListenEventsArray.forEach(({ song_id }) => {
+  userListenEventsArray?.forEach(({ song_id }) => {
     const occurrenceNumber = songIdOccurrenceMap.get(song_id) || 0;
     songIdOccurrenceMap.set(song_id, occurrenceNumber + 1);
   });
@@ -77,7 +77,7 @@ function findMostListenedArtistByTime(songIdOccurrenceMap) {
 }
 
 function fridayNightFilter(userListenEventsArray) {
-  return userListenEventsArray.filter(({ timestamp }) => {
+  return userListenEventsArray?.filter(({ timestamp }) => {
     const dateObject = new Date(timestamp);
     const dayIndex = dateObject.getDay();
     const hourNumber = dateObject.getHours();
@@ -92,24 +92,25 @@ function findSongListenedMostTimesInARow(userListenEventsArray) {
   let maxCount = 0;
   let count = 1;
 
-  for (let index = 1; index < userListenEventsArray.length; index++) {
+  for (let index = 1; index < userListenEventsArray?.length; index++) {
     if (
       userListenEventsArray[index].song_id ===
       userListenEventsArray[index - 1].song_id
     ) {
       count++;
-      console.log(index);
     } else {
       if (count > maxCount) {
         maxCount = count;
         mostListenedSongId = userListenEventsArray[index - 1].song_id;
-        count = 1;
       }
+      count = 1;
     }
   }
-
-  const { artist, title } = getSong(mostListenedSongId);
-  return `${artist} - ${title} (length: ${maxCount})`;
+  if (mostListenedSongId) {
+    const { artist, title } = getSong(mostListenedSongId);
+    return `${artist} - ${title} (length: ${maxCount})`;
+  }
+  return "";
 }
 
 export function getQuestionAndAnswerArrayOfObjects(userId) {
@@ -162,7 +163,3 @@ export function getQuestionAndAnswerArrayOfObjects(userId) {
 
   return questionAndAnswerArrayOfObjects;
 }
-
-const userListenEventsArray = getListenEvents(1);
-
-console.log(findSongListenedMostTimesInARow(userListenEventsArray));

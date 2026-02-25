@@ -25,11 +25,14 @@ function addListeners() {
 
 function createQuestionAndAnswerCard({ question, answer }) {
   const questionAndAnswerCard = document.createElement("div");
+  questionAndAnswerCard.className = "question-and-answer-card";
 
   const questionElement = document.createElement("p");
+  questionElement.className = "question";
   questionElement.textContent = question;
 
   const answerElement = document.createElement("p");
+  answerElement.className = "answer";
   answerElement.textContent = answer;
 
   questionAndAnswerCard.append(questionElement, answerElement);

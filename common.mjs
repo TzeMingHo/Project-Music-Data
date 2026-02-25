@@ -15,12 +15,12 @@ function createSongIdOccurrenceMap(userListenEventsArray) {
   return songIdOccurrenceMap;
 }
 
-function findMostListenedSongByCount(songIdOccurrenceMap) {
-  const mostListenedSongIdByCount = getTopWinnerFrom(
+function findMostListenedSongStringByCount(songIdOccurrenceMap) {
+  const mostListenedSongIdStringByCount = getTopWinnerFrom(
     Array.from(songIdOccurrenceMap),
   );
-  if (mostListenedSongIdByCount) {
-    const { artist, title } = getSong(mostListenedSongIdByCount);
+  if (mostListenedSongIdStringByCount) {
+    const { artist, title } = getSong(mostListenedSongIdStringByCount);
     return `${artist} - ${title}`;
   } else {
     return "";
@@ -34,15 +34,15 @@ function convertOccurrenceMapToTotalListenedSecondsArray(songIdOccurrenceMap) {
   });
 }
 
-function findMostListenedSongByTime(songIdOccurrenceMap) {
+function findMostListenedSongStringByTime(songIdOccurrenceMap) {
   const songIdTotalListenedSecondsArray =
     convertOccurrenceMapToTotalListenedSecondsArray(songIdOccurrenceMap);
 
-  const mostListenedSongIdByTime = getTopWinnerFrom(
+  const mostListenedSongIdStringByTime = getTopWinnerFrom(
     songIdTotalListenedSecondsArray,
   );
-  if (mostListenedSongIdByTime) {
-    const { artist, title } = getSong(mostListenedSongIdByTime);
+  if (mostListenedSongIdStringByTime) {
+    const { artist, title } = getSong(mostListenedSongIdStringByTime);
     return `${artist} - ${title}`;
   } else {
     return "";
@@ -87,6 +87,31 @@ function fridayNightFilter(userListenEventsArray) {
   });
 }
 
+function findSongListenedMostTimesInARow(userListenEventsArray) {
+  let mostListenedSongId = "";
+  let maxCount = 0;
+  let count = 1;
+
+  for (let index = 1; index < userListenEventsArray.length; index++) {
+    if (
+      userListenEventsArray[index].song_id ===
+      userListenEventsArray[index - 1].song_id
+    ) {
+      count++;
+      console.log(index);
+    } else {
+      if (count > maxCount) {
+        maxCount = count;
+        mostListenedSongId = userListenEventsArray[index - 1].song_id;
+        count = 1;
+      }
+    }
+  }
+
+  const { artist, title } = getSong(mostListenedSongId);
+  return `${artist} - ${title} (length: ${maxCount})`;
+}
+
 export function getQuestionAndAnswerArrayOfObjects(userId) {
   const userListenEventsArray = getListenEvents(userId);
   const songIdOccurrenceMap = createSongIdOccurrenceMap(userListenEventsArray);
@@ -97,12 +122,12 @@ export function getQuestionAndAnswerArrayOfObjects(userId) {
     {
       question:
         "What was the user's most often listened to song according to the data? (By count)",
-      answer: findMostListenedSongByCount(songIdOccurrenceMap),
+      answer: findMostListenedSongStringByCount(songIdOccurrenceMap),
     },
     {
       question:
         "What was the user's most often listened to song according to the data? (By time)",
-      answer: findMostListenedSongByTime(songIdOccurrenceMap),
+      answer: findMostListenedSongStringByTime(songIdOccurrenceMap),
     },
     {
       question:
@@ -117,23 +142,27 @@ export function getQuestionAndAnswerArrayOfObjects(userId) {
     {
       question:
         "What was the user's most often listened to song on Friday nights (between 5pm and 4am)? (By count)",
-      answer: findMostListenedSongByCount(
+      answer: findMostListenedSongStringByCount(
         createSongIdOccurrenceMap(fridayNightEventsArray),
       ),
     },
     {
       question:
         "What was the user's most often listened to song on Friday nights (between 5pm and 4am)? (By time)",
-      answer: findMostListenedSongByTime(
+      answer: findMostListenedSongStringByTime(
         createSongIdOccurrenceMap(fridayNightEventsArray),
       ),
     },
     {
       question:
         "What song did the user listen to the most times in a row (i.e. without any other song being listened to in between)? How many times was it listened to?",
-      answer: "",
+      answer: findSongListenedMostTimesInARow(userListenEventsArray),
     },
   ];
 
   return questionAndAnswerArrayOfObjects;
 }
+
+const userListenEventsArray = getListenEvents(1);
+
+console.log(findSongListenedMostTimesInARow(userListenEventsArray));

@@ -4,10 +4,11 @@
 
 ### The website must contain a drop-down which lists four users.
 
-    - Open the page, confirm there is a drop-down (select a user), and verify it contains 4 users.
+    - Go to the page, confirm there is a drop-down (select a user), and verify it contains 4 users.
 
 ### Selecting a user must display answers relevant to that user.
 
+    - Go to the page, select a user, confirm the page renders corresponding answers to that user.
     - Unit tests in common.test.mjs
 
 ### The code written to calculate the answers to the questions must seem like it could handle different data if it were supplied, including the following edge-cases:
@@ -34,4 +35,4 @@
 
 ### The website must score 100 for accessibility in Lighthouse
 
-    - Go to the page, go to inspect (F12), navigate to lighthouse section, select Snapshot, confirm accessibility score 100.
+    - Go to the page, go to inspect (F12), navigate to lighthouse section, select Snapshot, confirm accessibility score 100 in every view.

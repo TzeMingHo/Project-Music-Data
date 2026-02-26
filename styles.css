@@ -1,3 +1,7 @@
+:root {
+  --alice-blue: aliceblue;
+}
+
 #page-header {
   text-align: center;
 }
@@ -14,11 +18,12 @@ main {
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  background-color: antiquewhite;
+  padding-bottom: 3rem;
 }
 
 #report-area {
-  max-width: 80%;
+  max-width: 90%;
+  background-color: var(--alice-blue);
 }
 
 .question-and-answer-card {
@@ -36,4 +41,13 @@ main {
 .answer {
   font-size: large;
   font-weight: bold;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  background-color: white;
+  width: 100%;
+  text-align: center;
+  background-color: var(--alice-blue);
 }

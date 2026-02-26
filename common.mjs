@@ -176,11 +176,11 @@ export function findMostListenedGenres(songIdOccurrenceMap) {
     .map((genreOccurrencePair) => genreOccurrencePair[0]);
 }
 
-function createTopGenresQuestion(topGenres) {
-  if (topGenres.length === 0) return "";
-  return topGenres.length === 1
+function createTopGenresQuestion(topGenresArray) {
+  if (topGenresArray.length === 0) return "";
+  return topGenresArray.length === 1
     ? "What was the user's top genre to listen to by number of listens?"
-    : `What were the user's top ${topGenres.length} genres to listen to by number of listens?`;
+    : `What were the user's top ${topGenresArray.length} genres to listen to by number of listens?`;
 }
 
 export function getQuestionAndAnswerArrayOfObjects(userId) {
@@ -189,7 +189,7 @@ export function getQuestionAndAnswerArrayOfObjects(userId) {
 
   const fridayNightEventsArray = fridayNightFilter(userListenEventsArray);
 
-  const topGenres = findMostListenedGenres(songIdOccurrenceMap);
+  const topGenresArray = findMostListenedGenres(songIdOccurrenceMap);
 
   const questionAndAnswerArrayOfObjects = [
     {
@@ -237,8 +237,8 @@ export function getQuestionAndAnswerArrayOfObjects(userId) {
       answer: findEverydayListenedSongs(userListenEventsArray),
     },
     {
-      question: createTopGenresQuestion(topGenres),
-      answer: topGenres.join(", "),
+      question: createTopGenresQuestion(topGenresArray),
+      answer: topGenresArray.join(", "),
     },
   ];
 

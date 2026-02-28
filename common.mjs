@@ -90,7 +90,7 @@ export function fridayNightFilter(userListenEventsArray) {
 export function findSongListenedMostTimesInARow(userListenEventsArray) {
   if (!userListenEventsArray || userListenEventsArray.length === 0) return "";
 
-  let mostListenedSongId = "";
+  let mostListenedSongId = userListenEventsArray[0].song_id;
   let maxCount = 1;
   let count = 1;
 

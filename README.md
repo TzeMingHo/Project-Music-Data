@@ -17,6 +17,8 @@ We have provided a `data.js` file, which contains three functions to provide dat
 1. `getListenEvents(userID)`: when called, returns an array of objects, each of which contains information about a single time that the given user listened to a song. The listen events are sorted by when they happened, oldest to newest. The timestamps should be interpreted as in the user's current local time zone.
 2. `getSong(songID)`: when called with one string as an argument, returns an an object containing information about a single song.
 
+## Live demo: https://music-data-reports.netlify.app/
+
 ## Requirements
 
 This is an individual project. You are expected to work on it on your own. You can talk to other trainees and volunteers and get help and advice, but you should write all of the code yourself.

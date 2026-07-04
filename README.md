@@ -61,12 +61,7 @@ Building this dashboard provided hands-on experience handling lookups between us
   ```Bash
   npm install
   ```
-4. Run the local development environment:
-
-  ```Bash
-  npm start
-  ```
-5. Run the test suite:
+4. Run the test suite:
 
   ```Bash
   npm test

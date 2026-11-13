@@ -10,16 +10,27 @@
   </head>
   <body>
     <header>
-      <h1 id="page-header">Music Data Reports</h1>
-      <nav id="nav-bar" aria-label="nav-bar">
-        <select id="user-select" name="user-select" aria-label="user-select">
-          <option id="default-option" value="">Select a user</option>
-        </select>
-      </nav>
+      <p class="eyebrow">A listening data explorer</p>
+      <h1 id="page-header">Music Data <span>Reports</span></h1>
+      <p class="introduction">
+        Turn listening logs into a snapshot of each listener’s musical
+        habits—from favorite artists and genres to late-night listening streaks.
+      </p>
     </header>
     <main>
-      <div id="report-area"></div>
+      <section class="report-shell" aria-label="Listener report">
+        <div class="selector-panel">
+          <label for="user-select">Choose a listener</label>
+          <select id="user-select" name="user-select">
+            <option id="default-option" value="">Select a user</option>
+          </select>
+        </div>
+        <div id="report-area" aria-live="polite"></div>
+      </section>
     </main>
-    <footer>Created by Brian</footer>
+    <footer>
+      <span class="footer-dot" aria-hidden="true"></span>
+      Made for music lovers
+    </footer>
   </body>
 </html>

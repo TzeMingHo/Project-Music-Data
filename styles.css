@@ -1,53 +1,222 @@
 :root {
-  --alice-blue: aliceblue;
+  color-scheme: light;
+  font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  color: #17211d;
+  background: #f5f6ef;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --ink: #17211d;
+  --muted: #64716b;
+  --line: #e3e8dd;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  margin: 0;
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgb(183 237 105 / 20%),
+      transparent 34rem
+    ),
+    #f5f6ef;
+}
+
+header {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 5.5rem 1.5rem 3rem;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 0 1.2rem;
+  color: #53634e;
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #72a735;
+  content: "";
 }
 
 #page-header {
-  text-align: center;
+  margin: 0;
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  font-weight: 760;
+  letter-spacing: -0.075em;
+  line-height: 1;
 }
 
-#nav-bar select,
-option {
-  font-size: large;
-  padding: 0.5rem;
+#page-header span {
+  color: #718b54;
+}
+
+.introduction {
+  max-width: 590px;
+  margin: 1.5rem auto 0;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.75;
 }
 
 main {
+  width: min(100% - 2rem, 1040px);
+  margin: 0 auto 4rem;
+}
+
+.report-shell {
+  overflow: hidden;
+  border: 1px solid rgb(226 231 220 / 90%);
+  border-radius: 1.25rem;
+  background: rgb(255 254 250 / 85%);
+  box-shadow: 0 24px 70px rgb(34 48 32 / 8%);
+}
+
+.selector-panel {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
-  padding-bottom: 3rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.selector-panel label {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+select {
+  min-width: 190px;
+  padding: 0.75rem 2.5rem 0.75rem 0.9rem;
+  border: 1px solid #d5ddcf;
+  border-radius: 0.7rem;
+  background-color: white;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+select:focus-visible {
+  outline: 3px solid rgb(114 167 53 / 35%);
+  outline-offset: 2px;
 }
 
 #report-area {
-  max-width: 90%;
-  background-color: var(--alice-blue);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1.5rem;
 }
 
 .question-and-answer-card {
-  padding: 1rem;
-  margin-top: 1rem;
-  border-radius: 5px;
-  border: 1px solid;
-  background-color: white;
+  min-width: 0;
+  padding: 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  background: white;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.question-and-answer-card:hover {
+  transform: translateY(-2px);
+  border-color: #cbd9bc;
+  box-shadow: 0 10px 24px rgb(34 48 32 / 6%);
 }
 
 .question {
-  font-size: large;
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.55;
 }
 
 .answer {
-  font-size: large;
-  font-weight: bold;
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.1rem;
+  font-weight: 720;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+#report-area > p {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 1.5rem;
+  border-radius: 0.8rem;
+  background: #f1f5e9;
+  color: #43533d;
+  text-align: center;
 }
 
 footer {
-  position: fixed;
-  bottom: 0;
-  background-color: white;
-  width: 100%;
-  text-align: center;
-  background-color: var(--alice-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding: 1.25rem;
+  color: #758078;
+  font-size: 0.8rem;
+}
+
+.footer-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: #86b64d;
+}
+
+@media (max-width: 640px) {
+  header {
+    padding: 4rem 1.25rem 2.25rem;
+  }
+
+  .introduction {
+    font-size: 1rem;
+  }
+
+  .selector-panel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  select {
+    width: 100%;
+  }
+
+  #report-area {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
